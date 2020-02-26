@@ -29,16 +29,16 @@ mkvirtualenv VBT-barbell-tracker
 pip install -r requirements.txt
 ```
 
-## Generate intrinsic camera values to undistort fisheye/barrel effect
-3. Generate intrinsic camera distortion values to remove any barrel/fisheye distortion that your camera may have. You can easily spot this by looking at the outer perimeter of your camera to see if straight lines appear curved.
+3. Generate intrinsic camera values to undistort fisheye/barrel effect
+Generate intrinsic camera distortion values to remove any barrel/fisheye distortion that your camera may have. You can easily spot this by looking at the outer perimeter of your camera to see if straight lines appear curved.
 
-a. Using your webcam, take 10 or more snapshots of the chessboard printout. Save the images as `.png` files. Adhere the printout to a board, so it's very flat. The images should be taken to ensure you cover all areas of your image plane, paying attention to the outer perimeter where most of the distortion will take place. You can find the opencv chessboard image here: https://github.com/opencv/opencv/blob/master/doc/pattern.png
+  a. Using your webcam, take 10 or more snapshots of the chessboard printout. Save the images as `.png` files. Adhere the printout to a board, so it's very flat. The images should be taken to ensure you cover all areas of your image plane, paying attention to the outer perimeter where most of the distortion will take place. You can find the opencv chessboard image here: https://github.com/opencv/opencv/blob/master/doc/pattern.png
 
-b. Place these images in the `./images/` directory
+  b. Place these images in the `./images/` directory
 
-c. Take another image of the area you want to undistort as a test. Save it as `test.png` and place it in the `./images/` directory.
+  c. Take another image of the area you want to undistort as a test. Save it as `test.png` and place it in the `./images/` directory.
 
-d. Run the `python undistort_fisheye.py` script to discover the intrinsict values. They will be dumped out in a json file called `fisheye_calibration_data.json`
+  d. Run the `python undistort_fisheye.py` script to discover the intrinsict values. They will be dumped out in a json file called `fisheye_calibration_data.json`
 
 ## Usage
 
