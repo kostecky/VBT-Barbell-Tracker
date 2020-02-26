@@ -59,7 +59,7 @@ dim2=None
 dim3=None
 
 
-img = cv2.imread("images/rack.png")
+img = cv2.imread("images/test.png")
 dim1 = img.shape[:2][::-1]  #dim1 is the dimension of input image to un-distort
 assert dim1[0]/dim1[1] == DIM[0]/DIM[1], "Image to undistort needs to have same aspect ratio as the ones used in calibration"
 if not dim2:
