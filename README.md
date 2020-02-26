@@ -42,7 +42,7 @@ Generate intrinsic camera distortion values to remove any barrel/fisheye distort
 
 4. Place lime green paper/paint/etc. on the end of the barbell that faces the camera, ensuring that it covers the entire face of it. Then, take a measurement of the diameter of the face of the barbell end you covered. Mine comes out to 50mm, so the radius would be 25mm. This is **essential** to calibrating the distance scale within the app. You can use any colour you want, but you will have to adjust parameters accordingly. The idea here is to use a colour that is highly differentiated from anything being captured in your surroundings or your clothing.
 
-![Barbell with green marking on end](/images/rack.png?raw=true "Barbell with green marking on end")
+![Barbell with green marking on end](/images/test.png?raw=true "Barbell with green marking on end")
 
 ## Usage
 
