@@ -1,9 +1,17 @@
 # VBT-Barbell-Tracker
-Optically track a barbell through its range of motion using OpenCV to give the lifter feedback on concentric avg velocity and displacement for Velocity Based Training.
+Optically track a barbell through its range of motion using OpenCV to give the lifter realtime feedback on concentric avg velocity, cutoff velocity, and displacement for a Velocity Based Training program.
 
 ## Motivation
 
 ...
+
+## Journey
+
+...
+
+## VBT
+
+... 
 
 ## Requirements
 - Python 3.7
@@ -13,12 +21,17 @@ Optically track a barbell through its range of motion using OpenCV to give the l
 ## Installation
 
 1. Create a new python 3.7 virtualenv
-```mkvirtualenv VBT-barbell-tracker```
+```
+mkvirtualenv VBT-barbell-tracker
+```
 
 2. Install python requirements
-```pip install -r requirements.txt```
+```
+pip install -r requirements.txt
+```
 
-3. Generate the intrinsic camera distortion values
+### Optional (but recommended)
+1. Generate intrinsic camera distortion values to undistort the values
 ...
 
 ## Usage

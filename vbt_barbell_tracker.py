@@ -190,8 +190,13 @@ displacement = 0
 avg_velocities = []
 peak_velocities = []
 velocity_loss_threshold = 20
+in_range = True
+end_set = False
+colour = (0, 255, 0)
+avg_velocity = 0
+avg_velocity_loss = 0
 
-cv2.namedWindow("output", cv2.WINDOW_NORMAL)
+cv2.namedWindow("output", cv2.WINDOW_OPENGL)
 
 while True:
     (grabbed, frame) = camera.read()
