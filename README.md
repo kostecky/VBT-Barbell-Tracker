@@ -15,7 +15,7 @@ https://www.scienceforsport.com/velocity-based-training
 ## Requirements
 - Python 3.7
 - A webcam or IP camera that supports RTSP
-- Green paper/paint/etc.
+- Lime Green paper/paint/etc.
 
 ## Installation
 
@@ -40,6 +40,8 @@ Generate intrinsic camera distortion values to remove any barrel/fisheye distort
 
     d. Run the `python undistort_fisheye.py` script to discover the intrinsict values. They will be dumped out in a json file called `fisheye_calibration_data.json`
 
+4. Place lime green paper/paint/etc. on the end of the barbell that faces the camera.
+
 ## Usage
 
 ```
@@ -61,5 +63,10 @@ python VBT-barbell-tracker.py
 python VBT-barbell-tracker.py --video 'rtsp://USER:PASSWORD@192.168.1.127?tcp'
 ```
 
+## Hotkeys
 
+`r` Clear set and reset all counters and bar tracker. This also happens automatically after 2 minutes of no movement.
 
+## Roadmap
+- [ ] Refactor POC
+- [ ] Use QT or simpleGUI to reformulate into a proper app with input/output to adjust parameters on the fly
