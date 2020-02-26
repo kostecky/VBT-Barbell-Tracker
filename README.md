@@ -36,6 +36,10 @@ pip install -r requirements.txt
 
 ## Usage
 
+```
+workon VBT-barbell-tracker
+```
+
 ### Running it on a video
 ```
 python vbt_barbell_tracker.py --video press.mp4
