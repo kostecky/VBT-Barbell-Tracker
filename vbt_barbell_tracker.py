@@ -10,22 +10,52 @@ import simpleaudio as sa
 import wave
 
 
-def analyze_for_rep(history):
-    # Y inflection points start a set and end a set
-    # Characteristics to check for in a rep:
-    # 0. y inflection
-    # 1. y goes negative for y_disp
-    # 2. y infelction
-    # 3. y goes positive for roughly disp of 1
+def is_inflection(velocity, opposite_direction_is_true):
+    if opposite_direction_is_true:
+        if velocity < 0:
+            return True
+        else:
+            return False
+    if opposite_direction_is_true is False:
+        if velocity >= 0:
+            return True
+        else:
+            return False
 
-    # At inflection, look back on movement history array to last 2 inflection points to see if we can match the criteria and record a rep
+
+def analyze_for_rep(history):
     pos = 0
-    concentric = False
-    eccentric = False
-    concentric_disp = 0
-    eccentric_disp = 0
+    first_phase = False
+    second_phase = False
+    concentric_first_lift = False
+    displacement = 0
+    first_phase_disp = 0
+    second_phase_disp = 0
     velocities = []
     error = 0
+    vector_threshold = 8
+
+    print("Analyzing movement for rep...")
+    # We need at least vector_threshold points to determine a direction and almost definitely many more for a complete rep
+    if len(history) < 2 * vector_threshold:
+        return(False, (0.0, 0.0, 0))
+
+    # Method
+    # 1. determine direction by looking at last X points
+    # 2. keep reading and ensure each point matches initial direction up until inflection point
+    # 3. Read all points after inflection up until next inflection or end of history
+    # 4. Use criteria to determine if it's a rep
+    for direction_pos in range(1, vector_threshold):
+        displacement += history[-direction_pos][2]
+
+    if displacement > 0:
+        concentric_first_lift = True
+    elif displacement < 0:
+        concentric_first_lift = False
+    else:
+        # need more data to determine if it's a rep
+        return(False, (0.0, 0.0, 0))
+
     while True:
         pos += 1
 
@@ -33,42 +63,70 @@ def analyze_for_rep(history):
             break
 
         print(history[-pos])
-        # is the y velocity negative? (not in concentric phase, lifting) or have we processed concentric phase?
-        if not concentric:
-            # Count at least 1 concentric point before inflection and at least 100mm of displacemetn
-            if history[-pos][2] < 0 and concentric_disp > 200:
-                print("CONCENTRIC: {}".format(concentric_disp))
-                concentric = True
+
+        if not first_phase:
+            # Count at least 1 first phase point before inflection and at least 100mm of displacement
+            if is_inflection(history[-pos][2], concentric_first_lift) and first_phase_disp > 200:
+                print("First Phase Displacement: {}".format(first_phase_disp))
+                first_phase = True
             else:
-                if history[-pos][2] < 0:
+                if is_inflection(history[-pos][2], concentric_first_lift):
                     if error > 3:
+                        print("Found 3 error points that go in the opposite direction")
                         break
                     error += 1
                     continue
                 else:
-                    concentric_disp += abs(history[-pos][1])
+                    first_phase_disp += abs(history[-pos][1])
                     velocities.append(abs(history[-pos][2]))
                     continue
 
-        if not eccentric:
-            # Count at least 1 eccentric point before first inflection and 200mm of displacement
+        if not second_phase:
+            # Count at least 1 second phase point before first inflection and 200mm of displacement
             # or we're on the last point in history
-            if (history[-pos][2] > 0 and eccentric_disp > 200) or (pos == len(history) and eccentric_disp > 200):
-                eccentric = True
-                print("ECCENTRIC: {}".format(eccentric_disp))
+            if (is_inflection(history[-pos][2], not concentric_first_lift) and second_phase_disp > 200) or (pos == len(history) and second_phase_disp > 200):
+                second_phase = True
+                print("Second Phase Displacement: {}".format(second_phase_disp))
             else:
-                eccentric_disp += abs(history[-pos][1])
-                print("eccentric_disp: {}".format(eccentric_disp))
+                second_phase_disp += abs(history[-pos][1])
                 continue
 
         # All this criteria should give us a high probability of counting a rep
         # Move more than 100mm, difference between eccentric and concentric displacement < 200mm
-        if concentric and eccentric and abs(concentric_disp - eccentric_disp) < 100 and concentric_disp > 200:
-            print("Found rep! eccentric: {} mm, concentric: {} mm".format(eccentric_disp, concentric_disp))
+        if first_phase and second_phase and abs(second_phase_disp - first_phase_disp) < 100:
+            print("Found rep! first: {} mm, second: {} mm".format(first_phase_disp, second_phase_disp))
             avg_vel = sum(velocities) / len(velocities)
             peak_vel = max(velocities)
+            if concentric_first_lift:
+                concentric_disp = first_phase_disp
+            else:
+                concentric_disp = second_phase_disp
             return(True, (avg_vel, peak_vel, concentric_disp))
+
     return(False, (0.0, 0.0, 0))
+
+
+def analyze_for_x_movement(history):
+    # When there is a pause or inflection, let's check our previous points to see
+    # if there is more movement in the x direction than the y.
+    # This would indicate deracking/racking/setting up and we want to clear the history
+    # of any small movements that would confuse the algorithm from detecting the start
+    # of a rep, whether it be a concentric or eccentric first exercise.
+    pos = 0
+    x_displacement = 0
+    y_displacement = 0
+
+    print("Analyzing movement for large x displacement over y")
+
+    while pos < len(history):
+        x_displacement += abs(history[pos][0])
+        y_displacement += abs(history[pos][1])
+        pos += 1
+
+    if (x_displacement - y_displacement) >= 0:
+        return True
+
+    return False
 
 
 ap = argparse.ArgumentParser()
@@ -124,7 +182,7 @@ barbell_radius = 25
 reps = 0
 history = []
 # How many milliseconds at rest until we consider it a rep?
-rep_rest_threshold = 0.0
+rep_rest_threshold = 80.0
 rep_rest_time = 0.0
 avg_vel = 0.0
 peak_vel = 0.0
@@ -227,6 +285,9 @@ while True:
                 # analyze for last rep when we appear to rest for a threshold time
                 if (rep_rest_time > rep_rest_threshold) and not analyzed_rep:
                     analyzed_rep = True
+                    if analyze_for_x_movement(history):
+                        print("Detected significant x movement over y, resetting history...")
+                        history = []
                     (rep, ret) = analyze_for_rep(history)
 
             if rep:
