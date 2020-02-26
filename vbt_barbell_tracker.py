@@ -191,7 +191,7 @@ avg_velocities = []
 peak_velocities = []
 velocity_loss_threshold = 20
 
-cv2.namedWindow("output", cv2.WINDOW_OPENGL)
+cv2.namedWindow("output", cv2.WINDOW_NORMAL)
 
 while True:
     (grabbed, frame) = camera.read()
