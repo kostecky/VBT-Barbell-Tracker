@@ -296,44 +296,42 @@ while True:
                     (rep, ret) = analyze_for_rep(history)
 
             if rep:
-                wave_read = wave.open('good.wav', 'rb')
+                history = []
+                reps += 1
+                avg_velocities.append(ret[0])
+                peak_velocities.append(ret[1])
+                displacement = ret[2]
+
+                if reps == 1:
+                    avg_velocity = avg_velocities[0]
+                    peak_velocity = peak_velocities[0]
+                    if avg_velocity > 0.5 and avg_velocity < 0.75:
+                        in_range = True
+                        wave_read = wave.open('good.wav', 'rb')
+                    else:
+                        in_range = False
+                        wave_read = wave.open('bad.wav', 'rb')
+                else:
+                    avg_velocity = avg_velocities[-1]
+                    peak_velocity = peak_velocities[-1]
+                    avg_velocity_loss = (avg_velocities[0] - avg_velocities[-1]) / avg_velocities[0] * 100
+                    peak_velocity_loss = (peak_velocities[0] - peak_velocities[-1]) / peak_velocities[0] * 100
+
+                    if avg_velocity_loss > velocity_loss_threshold:
+                        end_set = True
+                        wave_read = wave.open('bad.wav', 'rb')
+                        colour = (0, 0, 255)
+                    else:
+                        end_set = False
+                        wave_read = wave.open('good.wav', 'rb')
+                        colour = (0, 255, 0)
+
                 audio_data = wave_read.readframes(wave_read.getnframes())
                 num_channels = wave_read.getnchannels()
                 bytes_per_sample = wave_read.getsampwidth()
                 sample_rate = wave_read.getframerate()
                 wave_obj = sa.WaveObject(audio_data, num_channels, bytes_per_sample, sample_rate)
                 play_obj = wave_obj.play()
-
-                history = []
-                reps += 1
-                avg_velocities.append(ret[0])
-                peak_velocities.append(ret[1])
-                displacement = ret[2]
-                if reps == 1:
-                    avg_velocity = avg_velocities[0]
-                    peak_velocity = peak_velocities[0]
-                    if avg_velocity > 0.5 and avg_velocity < 0.75:
-                        in_range = True
-                    else:
-                        in_range = False
-                else:
-                    avg_velocity = avg_velocities[-1]
-                    peak_velocity = peak_velocities[-1]
-                    avg_velocity_loss = (avg_velocities[0] - avg_velocities[-1]) / avg_velocities[0] * 100
-                    peak_velocity_loss = (peak_velocities[0] - peak_velocities[-1]) / peak_velocities[0] * 100
-                if avg_velocity_loss > velocity_loss_threshold:
-                    end_set = True
-                    wave_read = wave.open('bad.wav', 'rb')
-                    audio_data = wave_read.readframes(wave_read.getnframes())
-                    num_channels = wave_read.getnchannels()
-                    bytes_per_sample = wave_read.getsampwidth()
-                    sample_rate = wave_read.getframerate()
-                    wave_obj = sa.WaveObject(audio_data, num_channels, bytes_per_sample, sample_rate)
-                    play_obj = wave_obj.play()
-                    colour = (0, 0, 255)
-                else:
-                    end_set = False
-                    colour = (0, 255, 0)
 
             last_x = x
             last_y = y
