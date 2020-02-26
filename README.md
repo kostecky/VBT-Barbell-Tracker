@@ -1,13 +1,24 @@
 # VBT-Barbell-Tracker
-Optically track a barbell through its range of motion using OpenCV to give the lifter realtime feedback on concentric avg velocity, cutoff velocity, and displacement for a Velocity Based Training program.
+Develop a proof of concept app to optically track a barbell through its range of motion using OpenCV to give the lifter realtime feedback on concentric avg velocity, cutoff velocity, and displacement for a Velocity Based Training program.
+
+## How it works
+
+...
 
 ## Motivation
 
-...
+- Optimize workouts by taking meaningful measurements, getting live feedback, and putting in minimum effective effort
+- Autoregulation of load-volume
+- Injury reduction
+- Initial exposure to OpenCV and optical processing
+- Initial exposure to training CNNs
 
 ## Journey
 
-...
+- Started off wanting the app to auto-detect a wide variety of barbells in generalized surroundings
+- Spent a week playing with Google Colab and training CNNs to do so. Moderate success, lots of GPU power needed and way too slow for running on CPU only devices
+- Spent time playing with many different tracking models in OpenCV. None were reliable in a variety of scenarios.
+- Realized that tracking a differentiated colour and shape was very fast, didn't require a GPU and was orders of magnitude more reliable than any tracking algorithm. Simple wins with a bit more initial setup, but it was worth it.
 
 ## VBT
 https://www.scienceforsport.com/velocity-based-training
