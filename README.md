@@ -17,7 +17,7 @@ Once the barbell is at rest for 2 minutes, the counters and path tracking reset.
 - Injury reduction
 - Initial exposure to OpenCV and optical processing
 - Initial exposure to training CNNs
-- Initially avoid the purchase of a hardware unit like openbarbell, push, etc.
+- Avoid the purchase of a hardware unit like openbarbell, push, etc.
 
 ## Journey
 
