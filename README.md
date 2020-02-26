@@ -10,7 +10,7 @@ Optically track a barbell through its range of motion using OpenCV to give the l
 ...
 
 ## VBT
-There are many studies and much commentary about VBT. Here's one: https://www.scienceforsport.com/velocity-based-training
+There are many studies and much commentary on VBT. Here's one link to start you off https://www.scienceforsport.com/velocity-based-training
 
 ## Requirements
 - Python 3.7
