@@ -152,7 +152,7 @@ with open("fisheye_calibration_data.json", "r") as f:
 # (hMin = 40 , sMin = 46, vMin = 0), (hMax = 86 , sMax = 88, vMax = 181)
 # 2.png
 # (hMin = 33 , sMin = 48, vMin = 103), (hMax = 64 , sMax = 156, vMax = 255)
-greenLower = (33, 46, 0)
+greenLower = (33, 46, 80)
 greenUpper = (86, 156, 255)
 
 if not args.get("video", False):
@@ -183,6 +183,7 @@ reps = 0
 history = []
 # How many milliseconds at rest until we consider it a rep?
 rep_rest_threshold = 80.0
+rep_rest_reset_threshold = 120000
 rep_rest_time = 0.0
 avg_vel = 0.0
 peak_vel = 0.0
@@ -194,6 +195,7 @@ in_range = True
 end_set = False
 colour = (0, 255, 0)
 avg_velocity = 0
+first_velocity = 0
 avg_velocity_loss = 0
 
 cv2.namedWindow("output", cv2.WINDOW_OPENGL)
@@ -254,7 +256,7 @@ while True:
             end_set = False
             colour = (0, 255, 0)
 
-        if radius / im_height > 0.01:
+        if radius / im_height > 0.0125:
             # Take the first radius as the reference radius as it's stationary and most accurately represents dimensions
             if ref_radius is None:
                 ref_radius = radius
@@ -307,6 +309,7 @@ while True:
                     peak_velocity = peak_velocities[0]
                     if avg_velocity > 0.5 and avg_velocity < 0.75:
                         in_range = True
+                        first_velocity = avg_velocity
                         wave_read = wave.open('good.wav', 'rb')
                     else:
                         in_range = False
@@ -336,7 +339,7 @@ while True:
             last_x = x
             last_y = y
             cv2.circle(frame, (int(x), int(y)), int(ref_radius), (0, 255, 255), 2)
-            path_color = (0, 255, 0)
+            path_color = (0, 255, 255)
             center = (int(x), int(y))
             points.appendleft(center)
             for i in range(1, len(points)):
@@ -349,6 +352,7 @@ while True:
     fps.stop()
     info = [
         ("First set in range", "{}".format(in_range), (0, 255, 0)),
+        ("First set velocity", "{:.2f} m/s".format(first_velocity), (0, 255, 0)),
         ("Last AVG Con Velocity", "{:.2f} m/s".format(avg_velocity), (0, 255, 0)),
 #        ("Last PEAK Con Velocity", "{:.2f} m/s".format(peak_velocity), (0, 255, 0)),
         ("Last Displacement", "{:.2f} mm".format(displacement), (0, 255, 0)),
@@ -368,17 +372,19 @@ while True:
 
     cv2.imshow("output", frame)
     cv2.resizeWindow("output", (1500, 1000))
-#    cv2.imshow("Mask", mask)
+    # cv2.imshow("Mask", mask)
 
     key = cv2.waitKey(1) & 0xFF
 
     if key == ord("q"):
         break
-    elif key == ord("r"):
+    elif key == ord("r") or (rep_rest_time > rep_rest_reset_threshold):
         reps = 0
         avg_velocities = []
+        first_velocity = 0
         peak_velocities = []
         points.clear()
+        rep_rest_time = 0.0
 
 
 camera.release()
