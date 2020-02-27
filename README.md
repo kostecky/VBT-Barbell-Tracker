@@ -1,7 +1,7 @@
 # VBT-Barbell-Tracker
 A proof of concept app to optically track a barbell through its range of motion using OpenCV to give the lifter realtime feedback on concentric avg velocity, cutoff velocity, and displacement for a Velocity Based Training program.
 
-![Demo](/images/squat demo.png?raw=true "Squat Demo")
+![Demo](/images/'squat demo.gif'?raw=true "Squat Demo")
 
 ## How it works
 The app will detect a solid green area painted on to the end of your barbell. Given the measured diameter of this circle it will determine the pixel per mm scale to calculate distances and velocities of the barbell.
