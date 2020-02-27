@@ -1,6 +1,8 @@
 # VBT-Barbell-Tracker
 A proof of concept app to optically track a barbell through its range of motion using OpenCV to give the lifter realtime feedback on concentric avg velocity, cutoff velocity, and displacement for a Velocity Based Training program.
 
+![Demo](/images/squat demo.png?raw=true "Squat Demo")
+
 ## How it works
 The app will detect a solid green area painted on to the end of your barbell. Given the measured diameter of this circle it will determine the pixel per mm scale to calculate distances and velocities of the barbell.
 
@@ -58,8 +60,6 @@ Generate intrinsic camera distortion values to remove any barrel/fisheye distort
     d. Run the `python undistort_fisheye.py` script to discover the intrinsict values. They will be dumped out in a json file called `fisheye_calibration_data.json`
 
 4. Place lime green paper/paint/etc. on the end of the barbell that faces the camera, ensuring that it covers the entire face of it. Then, take a measurement of the diameter of the face of the barbell end you covered. Mine comes out to 50mm, so the radius would be 25mm. This is **essential** to calibrating the distance scale within the app. You can use any colour you want, but you will have to adjust parameters accordingly. The idea here is to use a colour that is highly differentiated from anything being captured in your surroundings or your clothing.
-
-![Barbell with green marking on end](/images/1.png?raw=true "Barbell with green marking on end")
 
 ## Usage
 
