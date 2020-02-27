@@ -1,9 +1,14 @@
 # VBT-Barbell-Tracker
-Develop a proof of concept app to optically track a barbell through its range of motion using OpenCV to give the lifter realtime feedback on concentric avg velocity, cutoff velocity, and displacement for a Velocity Based Training program.
+A proof of concept app to optically track a barbell through its range of motion using OpenCV to give the lifter realtime feedback on concentric avg velocity, cutoff velocity, and displacement for a Velocity Based Training program.
 
 ## How it works
+The app will detect a solid green area painted on to the end of your barbell. Given the measured diameter of this circle it will determine the pixel per mm scale to calculate distances and velocities of the barbell.
 
-...
+Movement of the barbell is continuously scanned to see if a lift is happening. When it detects a rep, it displays the most commonly referenced VBT metrics and informs you if your lifts are within 0.5-0.75 m/s as well as if they fall below a 20% velocity cutoff. There is an audible signal that is played of your lifts comply or fall outside of the range so you know when to terminate your set without having to keep your eyes on the computer.
+
+The display tells you what rep you're on, the displacement of the bar, the velocity of the concentric part of the lift and whether the art should be terminated.
+
+Once the barbell is at rest for 2 minutes, the counters and path tracking reset. You can also reset it by hand by pressing 'r'
 
 ## Motivation
 
@@ -12,6 +17,7 @@ Develop a proof of concept app to optically track a barbell through its range of
 - Injury reduction
 - Initial exposure to OpenCV and optical processing
 - Initial exposure to training CNNs
+- Initially avoid the purchase of a hardware unit like openbarbell, push, etc.
 
 ## Journey
 
