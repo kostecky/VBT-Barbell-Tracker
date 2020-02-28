@@ -78,7 +78,8 @@ def analyze_for_rep(history):
                     continue
                 else:
                     first_phase_disp += abs(history[-pos][1])
-                    velocities.append(abs(history[-pos][2]))
+                    if concentric_first_lift:
+                        velocities.append(abs(history[-pos][2]))
                     continue
 
         if not second_phase:
@@ -89,18 +90,21 @@ def analyze_for_rep(history):
                 print("Second Phase Displacement: {}".format(second_phase_disp))
             else:
                 second_phase_disp += abs(history[-pos][1])
+                if not concentric_first_lift:
+                    velocities.append(abs(history[-pos][2]))
                 continue
 
         # All this criteria should give us a high probability of counting a rep
         # Move more than 100mm, difference between eccentric and concentric displacement < 200mm
         if first_phase and second_phase and abs(second_phase_disp - first_phase_disp) < 100:
             print("Found rep! first: {} mm, second: {} mm".format(first_phase_disp, second_phase_disp))
-            avg_vel = sum(velocities) / len(velocities)
-            peak_vel = max(velocities)
             if concentric_first_lift:
                 concentric_disp = first_phase_disp
             else:
                 concentric_disp = second_phase_disp
+
+            avg_vel = sum(velocities) / len(velocities)
+            peak_vel = max(velocities)
             return(True, (avg_vel, peak_vel, concentric_disp))
 
     return(False, (0.0, 0.0, 0))
@@ -307,9 +311,9 @@ while True:
                 if reps == 1:
                     avg_velocity = avg_velocities[0]
                     peak_velocity = peak_velocities[0]
+                    first_velocity = avg_velocity
                     if avg_velocity > 0.5 and avg_velocity < 0.75:
                         in_range = True
-                        first_velocity = avg_velocity
                         wave_read = wave.open('good.wav', 'rb')
                     else:
                         in_range = False
