@@ -170,6 +170,8 @@ else:
 frameCount = int(camera.get(cv2.CAP_PROP_FRAME_COUNT))
 vid_fps = int(camera.get(cv2.CAP_PROP_FPS))
 print(vid_fps)
+# override with 25 fps
+vid_fps = 25
 fps = FPS().start()
 points = deque(maxlen=10000)
 
@@ -312,7 +314,7 @@ while True:
                     avg_velocity = avg_velocities[0]
                     peak_velocity = peak_velocities[0]
                     first_velocity = avg_velocity
-                    if avg_velocity > 0.5 and avg_velocity < 0.75:
+                    if avg_velocity > 0.5:
                         in_range = True
                         wave_read = wave.open('good.wav', 'rb')
                     else:
@@ -355,7 +357,7 @@ while True:
     fps.update()
     fps.stop()
     info = [
-        ("First set in range", "{}".format(in_range), (0, 255, 0)),
+        ("First set above 0.5 m/s", "{}".format(in_range), (0, 255, 0)),
         ("First set velocity", "{:.2f} m/s".format(first_velocity), (0, 255, 0)),
         ("Last AVG Con Velocity", "{:.2f} m/s".format(avg_velocity), (0, 255, 0)),
 #        ("Last PEAK Con Velocity", "{:.2f} m/s".format(peak_velocity), (0, 255, 0)),
