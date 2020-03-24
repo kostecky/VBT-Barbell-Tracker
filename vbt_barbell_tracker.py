@@ -301,7 +301,7 @@ while True:
                     if analyze_for_x_movement(history):
                         print("Detected significant x movement over y, resetting history...")
                         history = []
-                    (rep, ret) = analyze_for_rep(history)
+                    (rep, ret) = analyze_for_rep(history, reps)
 
             if rep:
                 history = []
