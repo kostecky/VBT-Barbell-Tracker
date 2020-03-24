@@ -23,7 +23,7 @@ def is_inflection(velocity, opposite_direction_is_true):
             return False
 
 
-def analyze_for_rep(history):
+def analyze_for_rep(history, reps):
     pos = 0
     first_phase = False
     second_phase = False
@@ -97,7 +97,7 @@ def analyze_for_rep(history):
         # All this criteria should give us a high probability of counting a rep
         # Move more than 100mm, difference between eccentric and concentric displacement < 200mm
         if first_phase and second_phase and abs(second_phase_disp - first_phase_disp) < 100:
-            print("Found rep! first: {} mm, second: {} mm".format(first_phase_disp, second_phase_disp))
+            print("Found rep {}! first: {} mm, second: {} mm".format(reps + 1, first_phase_disp, second_phase_disp))
             if concentric_first_lift:
                 concentric_disp = first_phase_disp
             else:
@@ -287,7 +287,7 @@ while True:
                 history.append((int(x_distance), int(y_distance), y_velocity))
                 if (y_velocity > 0 and y_vector_up is False) or (y_velocity < 0 and y_vector_up is True):
                     y_vector_up = not y_vector_up
-                    (rep, ret) = analyze_for_rep(history)
+                    (rep, ret) = analyze_for_rep(history, reps)
             else:
                 # Only log 0 once
                 if moving is True:
